@@ -3,6 +3,7 @@
     <words>
       <w>amqp</w>
       <w>rabbitmq</w>
+      <w>websockets</w>
     </words>
   </dictionary>
 </component>
