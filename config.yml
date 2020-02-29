@@ -1,0 +1,29 @@
+app:
+  port: ':5000'
+  cert_file: './cmd/chat/certificate.pem'
+  key_file: './cmd/chat/key.pem'
+  time_format: '2006-01-02T15:04:05'
+
+# amqp://guest:guest@localhost:5672/
+rabbitmq:
+  host: 'amqp://%s:%s@%s:%d/'
+  user: superhero
+  password: match
+  address: localhost
+  port: 5672
+
+cache:
+  address: 'localhost'
+  port: ':6379'
+  password: 'Awesome85**'
+  db: 0
+  pool_size: 25
+  minimum_idle_connections: 10
+  maximum_retries: 1
+  online_user_key_format: 'online.user.%s'
+
+producer:
+  brokers: ['localhost:9092']
+  topic: 'store.chat.message'
+  batch_size: 1
+  batch_timeout: 10

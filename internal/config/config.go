@@ -6,8 +6,10 @@ import (
 
 // Config holds the configuration.
 type Config struct {
-	DB       *DB
+	App      *App
 	RabbitMQ *RabbitMQ
+	Cache    *Cache
+	Producer *Producer
 }
 
 // NewConfig returns the configuration.
