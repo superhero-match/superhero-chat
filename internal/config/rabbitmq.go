@@ -15,9 +15,17 @@ package config
 
 // RabbitMQ holds the configuration values for the RabbitMQ.
 type RabbitMQ struct {
-	Host     string `env:"RABBITMQ_HOST" default:"amqp://%s:%s@%s:%d/"`
-	User     string `env:"RABBITMQ_USER" default:"superhero"`
-	Password string `env:"RABBITMQ_PASSWORD" default:"match"`
-	Address  string `env:"RABBITMQ_ADDRESS" default:"localhost"`
-	Port     int    `env:"RABBITMQ_PORT" default:"5672"`
+	Host               string `env:"RABBITMQ_HOST" default:"amqp://%s:%s@%s:%s/"`
+	User               string `env:"RABBITMQ_USER" default:"guest"`
+	Password           string `env:"RABBITMQ_PASSWORD" default:"guest"`
+	Address            string `env:"RABBITMQ_ADDRESS" default:"localhost"`
+	Port               string `env:"RABBITMQ_PORT" default:"5672"`
+	ExchangeName       string `env:"RABBITMQ_EXCHANGE_NAME" default:"message.for.*"`
+	ExchangeType       string `env:"RABBITMQ_EXCHANGE_TYPE" default:"topic"`
+	ExchangeDurable    bool   `env:"RABBITMQ_EXCHANGE_DURABLE" default:"true"`
+	ExchangeAutoDelete bool   `env:"RABBITMQ_EXCHANGE_AUTO_DELETE" default:"false"`
+	ExchangeInternal   bool   `env:"RABBITMQ_EXCHANGE_INTERNAL" default:"false"`
+	ExchangeNoWait     bool   `env:"RABBITMQ_EXCHANGE_NO_WAIT" default:"false"`
+	TopicMandatory     bool   `env:"RABBITMQ_TOPIC_MANDATORY" default:"false"`
+	TopicImmediate     bool   `env:"RABBITMQ_TOPIC_IMMEDIATE" default:"false"`
 }

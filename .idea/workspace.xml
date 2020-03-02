@@ -3,26 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="146cacab-9b4d-4db2-a010-03e0ad647e08" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/chat/controller/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/controller/controller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/chat/controller/websocket.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/controller/websocket.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/model/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/mapper/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/mapper/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/producer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/chat/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/get_online_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/get_online_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/set_online_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/set_online_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/producer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/config/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/rabbitmq.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/model/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/store.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/rabbitmq/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rabbitmq/rabbitmq.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,22 +77,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="363" y="92" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1366.728@0.0.1366.728" timestamp="1582961118342" />
-    <state width="1323" height="239" key="GridCell.Tab.0.bottom" timestamp="1582974909237">
+    <state width="1323" height="177" key="GridCell.Tab.0.bottom" timestamp="1583156422015">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="239" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1582974909237" />
-    <state width="1323" height="239" key="GridCell.Tab.0.center" timestamp="1582974909237">
+    <state width="1323" height="177" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1583156422015" />
+    <state width="1323" height="177" key="GridCell.Tab.0.center" timestamp="1583156422015">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="239" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1582974909237" />
-    <state width="1323" height="239" key="GridCell.Tab.0.left" timestamp="1582974909236">
+    <state width="1323" height="177" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1583156422015" />
+    <state width="1323" height="177" key="GridCell.Tab.0.left" timestamp="1583156422014">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="239" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1582974909236" />
-    <state width="1323" height="239" key="GridCell.Tab.0.right" timestamp="1582974909237">
+    <state width="1323" height="177" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1583156422014" />
+    <state width="1323" height="177" key="GridCell.Tab.0.right" timestamp="1583156422015">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="239" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1582974909237" />
+    <state width="1323" height="177" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1583156422015" />
   </component>
   <component name="masterDetails">
     <states>

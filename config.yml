@@ -6,11 +6,19 @@ app:
 
 # amqp://guest:guest@localhost:5672/
 rabbitmq:
-  host: 'amqp://%s:%s@%s:%d/'
-  user: superhero
-  password: match
+  host: 'amqp://%s:%s@%s:%s/'
+  user: guest
+  password: guest
   address: localhost
-  port: 5672
+  port: '5672'
+  exchange_name: 'message.for.*'
+  exchange_type: 'topic'
+  exchange_durable: true
+  exchange_auto_delete: false
+  exchange_internal: false
+  exchange_no_wait: false
+  topic_mandatory: false
+  topic_immediate: false
 
 cache:
   address: 'localhost'
