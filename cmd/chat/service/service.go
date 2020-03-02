@@ -14,18 +14,21 @@
 package service
 
 import (
+	"github.com/streadway/amqp"
 	"github.com/superhero-chat/internal/cache"
 	"github.com/superhero-chat/internal/config"
 	"github.com/superhero-chat/internal/producer"
+	"github.com/superhero-chat/internal/rabbitmq"
 	"go.uber.org/zap"
 )
 
 // Service holds all the different services that are used when handling request.
 type Service struct {
-	Producer   *producer.Producer
-	Cache      *cache.Cache
-	Logger     *zap.Logger
-	TimeFormat string
+	Producer        *producer.Producer
+	Cache           *cache.Cache
+	RabbitMQChannel *amqp.Channel
+	Logger          *zap.Logger
+	TimeFormat      string
 }
 
 // NewService creates value of type Service.
@@ -42,10 +45,16 @@ func NewService(cfg *config.Config) (*Service, error) {
 
 	defer logger.Sync()
 
+	ch, err := rabbitmq.NewRabbitMQChannel(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Service{
-		Producer:   producer.NewProducer(cfg),
-		Cache:      c,
-		Logger:     logger,
-		TimeFormat: cfg.App.TimeFormat,
+		Producer:        producer.NewProducer(cfg),
+		Cache:           c,
+		RabbitMQChannel: ch,
+		Logger:          logger,
+		TimeFormat:      cfg.App.TimeFormat,
 	}, nil
 }

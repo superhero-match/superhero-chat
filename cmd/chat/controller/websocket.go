@@ -35,7 +35,7 @@ var upgrader = websocket.Upgrader{
 // out of the map and the message will be sent ot the user.
 var connectedUsers map[string]*websocket.Conn
 
-func init()  {
+func init() {
 	connectedUsers = make(map[string]*websocket.Conn)
 }
 
@@ -70,6 +70,55 @@ func reader(conn *websocket.Conn, c *Controller) {
 			}
 
 			// User subscribes to RabbitMQ topic message.for.userid.
+			q, err := c.Service.RabbitMQChannel.QueueDeclare(
+				"",    // name
+				false, // durable
+				false, // delete when unused
+				true,  // exclusive
+				false, // no-wait
+				nil,   // arguments
+			)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			err = c.Service.RabbitMQChannel.QueueBind(
+				q.Name,           // queue name
+				message.SenderID, // routing key
+				"message.for.*",  // exchange
+				false,
+				nil,
+			)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			msgs, err := c.Service.RabbitMQChannel.Consume(
+				q.Name, // queue
+				"",     // consumer
+				true,   // auto ack
+				false,  // exclusive
+				false,  // no local
+				false,  // no wait
+				nil,    // args
+			)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			forever := make(chan bool)
+
+			go func() {
+				for d := range msgs {
+					log.Printf(" [x] %s", d.Body)
+				}
+			}()
+
+			log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
+			<-forever
+
 			break
 		case "message":
 			fmt.Println("Text message has been received...")
@@ -108,4 +157,3 @@ func (c *Controller) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	reader(ws, c)
 }
-

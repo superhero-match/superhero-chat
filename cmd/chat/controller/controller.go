@@ -39,5 +39,5 @@ func NewController(cfg *config.Config) (*Controller, error) {
 
 // SetupRoutes configures endpoints.
 func (c *Controller) SetupRoutes() {
-	http.HandleFunc("/ws", WsEndpoint)
+	http.HandleFunc("/ws", c.WsEndpoint)
 }

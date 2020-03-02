@@ -13,4 +13,34 @@
 */
 package rabbitmq
 
+import (
+	"fmt"
+	"github.com/streadway/amqp"
+	"github.com/superhero-chat/internal/config"
+)
 
+// NewRabbitMQChannel connects to RabbitMQ, creates channel, declares queue and returns channel.
+func NewRabbitMQChannel(cfg *config.Config) (*amqp.Channel, error) {
+	// "amqp://guest:guest@localhost:5672/
+	conn, err := amqp.Dial(fmt.Sprintf(cfg.RabbitMQ.Host, cfg.RabbitMQ.User, cfg.RabbitMQ.Password, cfg.RabbitMQ.Address, cfg.RabbitMQ.Port))
+	if err != nil {
+		return nil, err
+	}
+
+	ch, err := conn.Channel()
+	if err != nil {
+		return nil, err
+	}
+
+	err = ch.ExchangeDeclare(
+		cfg.RabbitMQ.ExchangeName,
+		cfg.RabbitMQ.ExchangeType,
+		cfg.RabbitMQ.ExchangeDurable,
+		cfg.RabbitMQ.ExchangeAutoDelete,
+		cfg.RabbitMQ.ExchangeInternal,
+		cfg.RabbitMQ.ExchangeNoWait,
+		nil,
+	)
+
+	return ch, nil
+}
