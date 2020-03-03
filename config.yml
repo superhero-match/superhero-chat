@@ -19,6 +19,7 @@ rabbitmq:
   exchange_no_wait: false
   topic_mandatory: false
   topic_immediate: false
+  content_type: "application/json"
 
 cache:
   address: 'localhost'

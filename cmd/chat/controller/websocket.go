@@ -14,9 +14,11 @@
 package controller
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/streadway/amqp"
 	"github.com/superhero-chat/cmd/chat/model"
 	"log"
 	"net/http"
@@ -70,7 +72,7 @@ func reader(conn *websocket.Conn, c *Controller) {
 			}
 
 			// User subscribes to RabbitMQ topic message.for.userid.
-			q, err := c.Service.RabbitMQChannel.QueueDeclare(
+			q, err := c.Service.RabbitMQ.Channel.QueueDeclare(
 				"",    // name
 				false, // durable
 				false, // delete when unused
@@ -83,10 +85,10 @@ func reader(conn *websocket.Conn, c *Controller) {
 				continue
 			}
 
-			err = c.Service.RabbitMQChannel.QueueBind(
-				q.Name,           // queue name
-				message.SenderID, // routing key
-				"message.for.*",  // exchange
+			err = c.Service.RabbitMQ.Channel.QueueBind(
+				q.Name,                          // queue name
+				message.SenderID,                // routing key
+				c.Service.RabbitMQ.ExchangeName, // exchange
 				false,
 				nil,
 			)
@@ -95,11 +97,11 @@ func reader(conn *websocket.Conn, c *Controller) {
 				continue
 			}
 
-			msgs, err := c.Service.RabbitMQChannel.Consume(
+			msgs, err := c.Service.RabbitMQ.Channel.Consume(
 				q.Name, // queue
 				"",     // consumer
 				true,   // auto ack
-				false,  // exclusive
+				true,   // exclusive
 				false,  // no local
 				false,  // no wait
 				nil,    // args
@@ -108,6 +110,7 @@ func reader(conn *websocket.Conn, c *Controller) {
 				log.Println(err)
 				continue
 			}
+
 			forever := make(chan bool)
 
 			go func() {
@@ -117,19 +120,59 @@ func reader(conn *websocket.Conn, c *Controller) {
 			}()
 
 			log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
-			<-forever
 
-			break
+			<-forever
 		case "message":
 			fmt.Println("Text message has been received...")
 			fmt.Printf("%+v\n", message)
 			fmt.Println()
 
-			// The message is published on the RabbitMQ topic for the receiver to receive the message.
-			// Message contains sender id, receiver id, message, something else.
-			// Once a message is received on topic, the socket is pulled out the map and the message is sent to the receiver.
+			// Once a message is received, the check is made whether the receiver is online.
+			online, err := c.Service.GetOnlineUser(fmt.Sprintf(c.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
+			if err != nil {
+				log.Println(err)
+				continue
+			}
 
-			break
+			// This value will be used by Kafka consumer once the message is consumed.
+			// If receiver is online, that means that message shouldn't be stored in cache
+			// and Firebase cloud function shouldn't be invoked
+			// because it was already sent to the receiver via RabbitMQ.
+			// If user is offline, then Kafka consumer will store the message in database
+			// and in cache and Firebase cloud function must be invoked in order to notify
+			// message receiver that message is awaiting on server.
+			var isOnline bool
+
+			// If message receiver is online, publish the message on RabbitMQ topic.
+			// This message will be emitted to the receiver via websocket stored in connectedUsers map
+			// (this is not implemented yet, it is the next step).
+			if len(online) > 0 {
+				isOnline = true
+
+				reqBodyBytes := new(bytes.Buffer)
+				err = json.NewEncoder(reqBodyBytes).Encode(message)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+
+				err = c.Service.RabbitMQ.Channel.Publish(
+					c.Service.RabbitMQ.ExchangeName,
+					message.ReceiverID, // routing key
+					false,
+					false,
+					amqp.Publishing{
+						ContentType: c.Service.RabbitMQ.ContentType,
+						Body:        reqBodyBytes.Bytes(),
+					},
+				)
+			}
+
+			err = c.Service.StoreMessage(message, isOnline)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
 		}
 
 		if err := conn.WriteMessage(messageType, p); err != nil {
