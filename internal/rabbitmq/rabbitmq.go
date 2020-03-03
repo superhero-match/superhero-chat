@@ -19,10 +19,24 @@ import (
 	"github.com/superhero-chat/internal/config"
 )
 
+type RabbitMQ struct {
+	Channel      *amqp.Channel
+	ExchangeName string
+	ContentType  string
+}
+
 // NewRabbitMQChannel connects to RabbitMQ, creates channel, declares queue and returns channel.
-func NewRabbitMQChannel(cfg *config.Config) (*amqp.Channel, error) {
+func NewRabbitMQ(cfg *config.Config) (*RabbitMQ, error) {
 	// "amqp://guest:guest@localhost:5672/
-	conn, err := amqp.Dial(fmt.Sprintf(cfg.RabbitMQ.Host, cfg.RabbitMQ.User, cfg.RabbitMQ.Password, cfg.RabbitMQ.Address, cfg.RabbitMQ.Port))
+	conn, err := amqp.Dial(
+		fmt.Sprintf(
+			cfg.RabbitMQ.Host,
+			cfg.RabbitMQ.User,
+			cfg.RabbitMQ.Password,
+			cfg.RabbitMQ.Address,
+			cfg.RabbitMQ.Port,
+		),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -42,5 +56,9 @@ func NewRabbitMQChannel(cfg *config.Config) (*amqp.Channel, error) {
 		nil,
 	)
 
-	return ch, nil
+	return &RabbitMQ{
+		Channel:      ch,
+		ExchangeName: cfg.RabbitMQ.ExchangeName,
+		ContentType:  cfg.RabbitMQ.ContentType,
+	}, nil
 }

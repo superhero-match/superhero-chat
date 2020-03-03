@@ -28,4 +28,5 @@ type RabbitMQ struct {
 	ExchangeNoWait     bool   `env:"RABBITMQ_EXCHANGE_NO_WAIT" default:"false"`
 	TopicMandatory     bool   `env:"RABBITMQ_TOPIC_MANDATORY" default:"false"`
 	TopicImmediate     bool   `env:"RABBITMQ_TOPIC_IMMEDIATE" default:"false"`
+	ContentType        string `env:"RABBITMQ_CONTENT_TYPE" default:"application/json"`
 }

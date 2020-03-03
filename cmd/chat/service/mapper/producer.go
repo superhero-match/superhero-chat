@@ -19,11 +19,12 @@ import (
 )
 
 // MapAPIMessageToProducer maps API Message model to Producer Message model.
-func MapAPIMessageToProducer(m model.Message) (message pm.Message) {
+func MapAPIMessageToProducer(m model.Message, isOnline bool) (message pm.Message) {
 	return pm.Message{
 		MessageType: m.MessageType,
 		SenderID:    m.SenderID,
 		ReceiverID:  m.ReceiverID,
 		Message:     m.Message,
+		IsOnline:    isOnline,
 	}
 }
