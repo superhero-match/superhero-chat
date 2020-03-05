@@ -14,10 +14,9 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/superhero-chat/cmd/chat/socketio"
 	"github.com/superhero-chat/internal/config"
-	"log"
-	"net/http"
 )
 
 func main() {
@@ -25,6 +24,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	router := gin.New()
 
 	socketIO, err := socketio.NewSocketIO(cfg)
 	if err != nil {
@@ -36,14 +37,18 @@ func main() {
 		panic(err)
 	}
 
-	serveMux := http.NewServeMux()
-	serveMux.Handle("/", server)
+	go server.Serve()
+	defer server.Close()
 
-	log.Println("Starting server...")
-	log.Fatal(http.ListenAndServeTLS(
+	router.GET("/*any", gin.WrapH(server))
+	router.POST("/*any", gin.WrapH(server))
+
+	err = router.RunTLS(
 		cfg.App.Port,
 		cfg.App.CertFile,
 		cfg.App.KeyFile,
-		serveMux,
-	))
+	)
+	if err != nil {
+		panic(err)
+	}
 }
