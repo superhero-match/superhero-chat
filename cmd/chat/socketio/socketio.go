@@ -4,8 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	gosocketio "github.com/graarh/golang-socketio"
-	"github.com/graarh/golang-socketio/transport"
+	socketio "github.com/googollee/go-socket.io"
 	"github.com/streadway/amqp"
 	"github.com/superhero-chat/cmd/chat/model"
 	"github.com/superhero-chat/cmd/chat/service"
@@ -17,10 +16,11 @@ import (
 // These websockets are going to be used when message is going to be received on RabbitMQ topic.
 // Once a message for a specific user will be received, websocket of that specific user will be pulled
 // out of the map and the message will be sent ot the user.
-var connectedUsers map[string]*gosocketio.Channel
+var connectedUsers map[string]socketio.Conn
+var connectedUsersIDs map[string]string
 
 func init() {
-	connectedUsers = make(map[string]*gosocketio.Channel)
+	connectedUsers = make(map[string]socketio.Conn)
 }
 
 // SocketIO holds all the data related to Socket.IO.
@@ -41,24 +41,30 @@ func NewSocketIO(cfg *config.Config) (*SocketIO, error) {
 }
 
 // NewSocketIOServer returns Socket.IO server.
-func (s *SocketIO) NewSocketIOServer() (*gosocketio.Server, error) {
-	//create
-	server := gosocketio.NewServer(transport.GetDefaultWebsocketTransport())
-
-	//handle connected
-	err := server.On(gosocketio.OnConnection, func(c *gosocketio.Channel) {
-		log.Println("New client connected")
-	})
+func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
+	server, err := socketio.NewServer(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	err = server.On("onOpen", func(c *gosocketio.Channel, message model.Message) string {
+	server.OnConnect("/", func(c socketio.Conn) error {
+		log.Println("New client connected")
+
+		return nil
+	})
+
+	server.OnEvent("/", "onOpen", func(c socketio.Conn, msg string) {
 		log.Println("onOpen event raised...")
-		fmt.Printf("%+v\n", message)
+		fmt.Printf("%s\n", msg)
 		fmt.Println()
 
+		var message model.Message
+		if err := json.Unmarshal([]byte(msg), &message); err != nil {
+			log.Println(err)
+		}
+
 		connectedUsers[message.SenderID] = c
+		connectedUsersIDs[c.ID()] = message.SenderID
 
 		err = s.Service.SetOnlineUser(message.SenderID)
 		if err != nil {
@@ -67,10 +73,10 @@ func (s *SocketIO) NewSocketIOServer() (*gosocketio.Server, error) {
 
 		// User subscribes to RabbitMQ topic message.for.userid.
 		q, err := s.Service.RabbitMQ.Channel.QueueDeclare(
-			"",    // name
-			false, // durable
-			false, // delete when unused
-			true,  // exclusive
+			"",    // name, when left empty RabbitMQ generates one automatically.
+			false, // durable means persisted on disk.
+			false, // delete
+			true,  // exclusive queue when connections is closed.
 			false, // no-wait
 			nil,   // arguments
 		)
@@ -127,29 +133,24 @@ func (s *SocketIO) NewSocketIOServer() (*gosocketio.Server, error) {
 					continue
 				}
 
-				if err = ws.Emit("message", m); err != nil {
-					log.Println(err)
-					continue
-				}
+				ws.Emit("message", m)
 			}
 		}()
 
 		log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
 
 		<-forever
-
-		return "OK"
 	})
-	if err != nil {
-		return nil, err
-	}
 
-	err = server.On("message", func(c *gosocketio.Channel, message model.Message) string {
-		//send event to all in room
-		// c.Emit("my event", "my data")
+	server.OnEvent("/", "message", func(c socketio.Conn, msg string) {
 		log.Println("message event raised...")
-		fmt.Printf("%+v\n", message)
+		fmt.Printf("%s\n", msg)
 		fmt.Println()
+
+		var message model.Message
+		if err := json.Unmarshal([]byte(msg), &message); err != nil {
+			log.Println(err)
+		}
 
 		// Once a message is received, the check is made whether the receiver is online.
 		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
@@ -194,12 +195,17 @@ func (s *SocketIO) NewSocketIOServer() (*gosocketio.Server, error) {
 		if err != nil {
 			log.Println(err)
 		}
-
-		return "OK"
 	})
-	if err != nil {
-		return nil, err
-	}
+
+	server.OnDisconnect("/", func(c socketio.Conn, reason string) {
+		log.Println("OnDisconnect event raised...", reason)
+
+		userID, ok := connectedUsersIDs[c.ID()]
+		if ok {
+			delete(connectedUsers, userID)
+			delete(connectedUsersIDs, c.ID())
+		}
+	})
 
 	return server, nil
 }
