@@ -21,6 +21,7 @@ var connectedUsersIDs map[string]string
 
 func init() {
 	connectedUsers = make(map[string]socketio.Conn)
+	connectedUsersIDs = make(map[string]string)
 }
 
 // SocketIO holds all the data related to Socket.IO.
@@ -55,8 +56,6 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 
 	server.OnEvent("/", "onOpen", func(c socketio.Conn, msg string) {
 		log.Println("onOpen event raised...")
-		fmt.Printf("%s\n", msg)
-		fmt.Println()
 
 		var message model.Message
 		if err := json.Unmarshal([]byte(msg), &message); err != nil {
@@ -76,7 +75,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			"",    // name, when left empty RabbitMQ generates one automatically.
 			false, // durable means persisted on disk.
 			false, // delete
-			true,  // exclusive queue when connections is closed.
+			false, // exclusive queue when connections is closed.
 			false, // no-wait
 			nil,   // arguments
 		)
@@ -99,7 +98,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			q.Name, // queue
 			"",     // consumer
 			true,   // auto ack
-			true,   // exclusive
+			false,  // exclusive
 			false,  // no local
 			false,  // no wait
 			nil,    // args
@@ -108,38 +107,34 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			log.Println(err)
 		}
 
-		forever := make(chan bool)
-
 		go func() {
 			for d := range msgs {
 				log.Printf(" [x] %s", d.Body)
 
-				var m model.Message
-				if err := json.Unmarshal(d.Body, &m); err != nil {
+			var m model.Message
+			if err := json.Unmarshal(d.Body, &m); err != nil {
+				log.Println(err)
+				continue
+			}
+
+			ws, ok := connectedUsers[m.ReceiverID]
+			if !ok {
+				// User is not online anymore, that means the offline message needs to be stored in database,
+				// cache and Firebase cloud function needs to be run in order to notify user that there is
+				// offline message awaiting on the server that needs to be picked up.
+				err = s.Service.StoreMessage(m, false)
+				if err != nil {
 					log.Println(err)
-					continue
 				}
 
-				ws, ok := connectedUsers[m.ReceiverID]
-				if !ok {
-					// User is not online anymore, that means the offline message needs to be stored in database,
-					// cache and Firebase cloud function needs to be run in order to notify user that there is
-					// offline message awaiting on the server that needs to be picked up.
-					err = s.Service.StoreMessage(m, false)
-					if err != nil {
-						log.Println(err)
-					}
-
-					continue
-				}
+				continue
+			}
 
 				ws.Emit("message", m)
 			}
 		}()
 
 		log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
-
-		<-forever
 	})
 
 	server.OnEvent("/", "message", func(c socketio.Conn, msg string) {
@@ -173,8 +168,8 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		if len(online) > 0 {
 			isOnline = true
 
-			reqBodyBytes := new(bytes.Buffer)
-			err = json.NewEncoder(reqBodyBytes).Encode(message)
+			messageBytes := new(bytes.Buffer)
+			err = json.NewEncoder(messageBytes).Encode(message)
 			if err != nil {
 				log.Println(err)
 			}
@@ -186,7 +181,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 				false,
 				amqp.Publishing{
 					ContentType: s.Service.RabbitMQ.ContentType,
-					Body:        reqBodyBytes.Bytes(),
+					Body:        messageBytes.Bytes(),
 				},
 			)
 		}
@@ -195,6 +190,11 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		if err != nil {
 			log.Println(err)
 		}
+	})
+
+	server.OnError("/", func(e error) {
+		log.Println("OnError event raised...")
+		log.Println(e)
 	})
 
 	server.OnDisconnect("/", func(c socketio.Conn, reason string) {
