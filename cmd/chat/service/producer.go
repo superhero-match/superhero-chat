@@ -14,8 +14,8 @@
 package service
 
 import (
-	"github.com/superhero-chat/cmd/chat/model"
-	"github.com/superhero-chat/cmd/chat/service/mapper"
+	"github.com/superhero-match/superhero-chat/cmd/chat/model"
+	"github.com/superhero-match/superhero-chat/cmd/chat/service/mapper"
 )
 
 // StoreMessage publishes new message on Kafka topic for it to be

@@ -16,7 +16,7 @@ package rabbitmq
 import (
 	"fmt"
 	"github.com/streadway/amqp"
-	"github.com/superhero-chat/internal/config"
+	"github.com/superhero-match/superhero-chat/internal/config"
 )
 
 type RabbitMQ struct {

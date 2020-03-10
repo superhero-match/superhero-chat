@@ -14,10 +14,10 @@
 package service
 
 import (
-	"github.com/superhero-chat/internal/cache"
-	"github.com/superhero-chat/internal/config"
-	"github.com/superhero-chat/internal/producer"
-	"github.com/superhero-chat/internal/rabbitmq"
+	"github.com/superhero-match/superhero-chat/internal/cache"
+	"github.com/superhero-match/superhero-chat/internal/config"
+	"github.com/superhero-match/superhero-chat/internal/producer"
+	"github.com/superhero-match/superhero-chat/internal/rabbitmq"
 	"go.uber.org/zap"
 )
 

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/streadway/amqp"
-	"github.com/superhero-chat/cmd/chat/model"
-	"github.com/superhero-chat/cmd/chat/service"
-	"github.com/superhero-chat/internal/config"
+	"github.com/superhero-match/superhero-chat/cmd/chat/model"
+	"github.com/superhero-match/superhero-chat/cmd/chat/service"
+	"github.com/superhero-match/superhero-chat/internal/config"
 	"log"
 )
 
