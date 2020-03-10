@@ -15,8 +15,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/superhero-chat/cmd/chat/socketio"
-	"github.com/superhero-chat/internal/config"
+	"github.com/superhero-match/superhero-chat/cmd/chat/socketio"
+	"github.com/superhero-match/superhero-chat/internal/config"
 )
 
 func main() {

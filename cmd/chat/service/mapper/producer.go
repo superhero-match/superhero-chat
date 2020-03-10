@@ -14,17 +14,26 @@
 package mapper
 
 import (
-	"github.com/superhero-chat/cmd/chat/model"
-	pm "github.com/superhero-chat/internal/producer/model"
+	"time"
+
+	"github.com/superhero-match/superhero-chat/cmd/chat/model"
+	pm "github.com/superhero-match/superhero-chat/internal/producer/model"
+)
+
+const (
+	timeFormat = "2006-01-02T15:04:05"
 )
 
 // MapAPIMessageToProducer maps API Message model to Producer Message model.
 func MapAPIMessageToProducer(m model.Message, isOnline bool) (message pm.Message) {
+	t := time.Now().UTC()
+
 	return pm.Message{
 		MessageType: m.MessageType,
 		SenderID:    m.SenderID,
 		ReceiverID:  m.ReceiverID,
 		Message:     m.Message,
 		IsOnline:    isOnline,
+		CreatedAt:   t.Format(timeFormat),
 	}
 }

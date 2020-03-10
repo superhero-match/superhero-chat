@@ -19,7 +19,7 @@ import (
 	"encoding/json"
 	"github.com/segmentio/kafka-go"
 
-	"github.com/superhero-chat/internal/producer/model"
+	"github.com/superhero-match/superhero-chat/internal/producer/model"
 )
 
 // StoreMessage publishes new choice on Kafka topic for it to be

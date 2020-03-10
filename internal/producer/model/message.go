@@ -20,4 +20,5 @@ type Message struct {
 	ReceiverID  string `json:"receiverId"`
 	Message     string `json:"message"`
 	IsOnline    bool   `json:"isOnline"`
+	CreatedAt   string `json:"createdAt"`
 }
