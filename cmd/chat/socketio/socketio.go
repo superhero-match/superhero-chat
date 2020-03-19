@@ -111,24 +111,24 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			for d := range msgs {
 				log.Printf(" [x] %s", d.Body)
 
-			var m model.Message
-			if err := json.Unmarshal(d.Body, &m); err != nil {
-				log.Println(err)
-				continue
-			}
-
-			ws, ok := connectedUsers[m.ReceiverID]
-			if !ok {
-				// User is not online anymore, that means the offline message needs to be stored in database,
-				// cache and Firebase cloud function needs to be run in order to notify user that there is
-				// offline message awaiting on the server that needs to be picked up.
-				err = s.Service.StoreMessage(m, false)
-				if err != nil {
+				var m model.Message
+				if err := json.Unmarshal(d.Body, &m); err != nil {
 					log.Println(err)
+					continue
 				}
 
-				continue
-			}
+				ws, ok := connectedUsers[m.ReceiverID]
+				if !ok {
+					// User is not online anymore, that means the offline message needs to be stored in database,
+					// cache and Firebase cloud function needs to be run in order to notify user that there is
+					// offline message awaiting on the server that needs to be picked up.
+					err = s.Service.StoreMessage(m, false)
+					if err != nil {
+						log.Println(err)
+					}
+
+					continue
+				}
 
 				ws.Emit("message", m)
 			}
