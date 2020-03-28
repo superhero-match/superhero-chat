@@ -97,7 +97,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		msgs, err := s.Service.RabbitMQ.Channel.Consume(
 			q.Name, // queue
 			"",     // consumer
-			true,   // auto ack
+			false,  // auto ack
 			false,  // exclusive
 			false,  // no local
 			false,  // no wait
@@ -131,6 +131,10 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 				}
 
 				ws.Emit("message", m)
+
+				if err = d.Ack(false); err != nil {
+					log.Println(err)
+				}
 			}
 		}()
 
@@ -190,11 +194,6 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		if err != nil {
 			log.Println(err)
 		}
-	})
-
-	server.OnError("/", func(e error) {
-		log.Println("OnError event raised...")
-		log.Println(e)
 	})
 
 	server.OnDisconnect("/", func(c socketio.Conn, reason string) {
