@@ -15,7 +15,7 @@ package config
 
 // Cache holds all the configuration settings for the Redis client.
 type Cache struct {
-	Address                string `env:"REDIS_ADDRESS" default:"localhost"`
+	Address                string `env:"REDIS_ADDRESS" default:"192.168.0.105"`
 	Port                   string `env:"REDIS_PORT" default:":6379"`
 	Password               string `env:"REDIS_PASSWORD" default:"Awesome85**"`
 	DB                     int    `env:"REDIS_DB" default:"0"`
