@@ -40,3 +40,8 @@ func (s *Service) GetOnlineUser(key string) (string, error) {
 
 	return onlineUserID, nil
 }
+
+// DeleteOnlineUser deletes online user form Redis cache when user disconnects.
+func (s *Service) DeleteOnlineUser(userID string) error {
+	return s.Cache.DeleteOnlineUser(userID)
+}

@@ -117,8 +117,11 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					continue
 				}
 
+				log.Println("Before ws, ok := connectedUsers[m.ReceiverID]")
+
 				ws, ok := connectedUsers[m.ReceiverID]
 				if !ok {
+					log.Println("!ok --> user is offline")
 					// User is not online anymore, that means the offline message needs to be stored in database,
 					// cache and Firebase cloud function needs to be run in order to notify user that there is
 					// offline message awaiting on the server that needs to be picked up.
@@ -130,11 +133,15 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					continue
 				}
 
+				log.Println("Before ws.Emit(message, m)")
 				ws.Emit("message", m)
+				log.Println("After ws.Emit(message, m)")
 
+				log.Println("Before d.Ack(false)")
 				if err = d.Ack(false); err != nil {
 					log.Println(err)
 				}
+				log.Println("After d.Ack(false)")
 			}
 		}()
 
@@ -143,19 +150,22 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 
 	server.OnEvent("/", "message", func(c socketio.Conn, msg string) {
 		log.Println("message event raised...")
-		fmt.Printf("%s\n", msg)
-		fmt.Println()
 
 		var message model.Message
 		if err := json.Unmarshal([]byte(msg), &message); err != nil {
 			log.Println(err)
 		}
 
+		log.Println("Unmarshalled message into struct...")
+
 		// Once a message is received, the check is made whether the receiver is online.
 		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
 		if err != nil {
 			log.Println(err)
 		}
+
+		log.Println("s.Service.GetOnlineUser:")
+		log.Println(online)
 
 		// This value will be used by Kafka consumer once the message is consumed.
 		// If receiver is online, that means that message shouldn't be stored in cache
@@ -178,6 +188,8 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 				log.Println(err)
 			}
 
+			log.Println("Before s.Service.RabbitMQ.Channel.Publish")
+
 			err = s.Service.RabbitMQ.Channel.Publish(
 				s.Service.RabbitMQ.ExchangeName,
 				message.ReceiverID, // routing key
@@ -188,12 +200,16 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					Body:        messageBytes.Bytes(),
 				},
 			)
+
+			log.Println("After s.Service.RabbitMQ.Channel.Publish")
 		}
 
 		err = s.Service.StoreMessage(message, isOnline)
 		if err != nil {
 			log.Println(err)
 		}
+
+		log.Println("message event processed...")
 	})
 
 	server.OnDisconnect("/", func(c socketio.Conn, reason string) {
@@ -201,8 +217,16 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 
 		userID, ok := connectedUsersIDs[c.ID()]
 		if ok {
+			log.Println("Before delete(connectedUsers, userID)")
 			delete(connectedUsers, userID)
+
+			log.Println("Before delete(connectedUsersIDs, c.ID())")
 			delete(connectedUsersIDs, c.ID())
+
+			log.Println("Before s.Service.DeleteOnlineUser(userID)")
+			if err := s.Service.DeleteOnlineUser(userID); err != nil {
+				log.Println(err)
+			}
 		}
 	})
 

@@ -1,0 +1,29 @@
+/*
+  Copyright (C) 2019 - 2020 MWSOFT
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+package cache
+
+import "fmt"
+
+// DeleteOnlineUser deletes online user form Redis cache when user disconnects.
+func (c *Cache) DeleteOnlineUser(userID string) error {
+	keys := make([]string, 0)
+	keys = append(keys, fmt.Sprintf(c.OnlineUserKeyFormat, userID))
+
+	err := c.Redis.Del(keys...).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
