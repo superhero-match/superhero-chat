@@ -18,10 +18,12 @@ import (
 // out of the map and the message will be sent ot the user.
 var connectedUsers map[string]socketio.Conn
 var connectedUsersIDs map[string]string
+var connectedUsersQueueNames map[string]string
 
 func init() {
 	connectedUsers = make(map[string]socketio.Conn)
 	connectedUsersIDs = make(map[string]string)
+	connectedUsersQueueNames = make(map[string]string)
 }
 
 // SocketIO holds all the data related to Socket.IO.
@@ -73,9 +75,9 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		// User subscribes to RabbitMQ topic message.for.userid.
 		q, err := s.Service.RabbitMQ.Channel.QueueDeclare(
 			"",    // name, when left empty RabbitMQ generates one automatically.
-			false, // durable means persisted on disk.
-			false, // delete
-			false, // exclusive queue when connections is closed.
+			true,  // durable means persisted on disk.
+			true,  // delete
+			true,  // exclusive queue is deleted when connection that declared it is closed.
 			false, // no-wait
 			nil,   // arguments
 		)
@@ -93,6 +95,8 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		if err != nil {
 			log.Println(err)
 		}
+
+		connectedUsersQueueNames[message.SenderID] = q.Name
 
 		msgs, err := s.Service.RabbitMQ.Channel.Consume(
 			q.Name, // queue
@@ -117,11 +121,8 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					continue
 				}
 
-				log.Println("Before ws, ok := connectedUsers[m.ReceiverID]")
-
 				ws, ok := connectedUsers[m.ReceiverID]
 				if !ok {
-					log.Println("!ok --> user is offline")
 					// User is not online anymore, that means the offline message needs to be stored in database,
 					// cache and Firebase cloud function needs to be run in order to notify user that there is
 					// offline message awaiting on the server that needs to be picked up.
@@ -133,15 +134,11 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					continue
 				}
 
-				log.Println("Before ws.Emit(message, m)")
 				ws.Emit("message", m)
-				log.Println("After ws.Emit(message, m)")
 
-				log.Println("Before d.Ack(false)")
 				if err = d.Ack(false); err != nil {
 					log.Println(err)
 				}
-				log.Println("After d.Ack(false)")
 			}
 		}()
 
@@ -156,16 +153,11 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			log.Println(err)
 		}
 
-		log.Println("Unmarshalled message into struct...")
-
 		// Once a message is received, the check is made whether the receiver is online.
 		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
 		if err != nil {
 			log.Println(err)
 		}
-
-		log.Println("s.Service.GetOnlineUser:")
-		log.Println(online)
 
 		// This value will be used by Kafka consumer once the message is consumed.
 		// If receiver is online, that means that message shouldn't be stored in cache
@@ -188,8 +180,6 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 				log.Println(err)
 			}
 
-			log.Println("Before s.Service.RabbitMQ.Channel.Publish")
-
 			err = s.Service.RabbitMQ.Channel.Publish(
 				s.Service.RabbitMQ.ExchangeName,
 				message.ReceiverID, // routing key
@@ -200,16 +190,12 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					Body:        messageBytes.Bytes(),
 				},
 			)
-
-			log.Println("After s.Service.RabbitMQ.Channel.Publish")
 		}
 
 		err = s.Service.StoreMessage(message, isOnline)
 		if err != nil {
 			log.Println(err)
 		}
-
-		log.Println("message event processed...")
 	})
 
 	server.OnDisconnect("/", func(c socketio.Conn, reason string) {
@@ -217,13 +203,23 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 
 		userID, ok := connectedUsersIDs[c.ID()]
 		if ok {
-			log.Println("Before delete(connectedUsers, userID)")
 			delete(connectedUsers, userID)
 
-			log.Println("Before delete(connectedUsersIDs, c.ID())")
 			delete(connectedUsersIDs, c.ID())
 
-			log.Println("Before s.Service.DeleteOnlineUser(userID)")
+			queueName, ok := connectedUsersQueueNames[userID]
+			if ok {
+				err = s.Service.RabbitMQ.Channel.QueueUnbind(
+					queueName,
+					userID,
+					s.Service.RabbitMQ.ExchangeName,
+					nil,
+				)
+				if err != nil {
+					log.Println(err)
+				}
+			}
+
 			if err := s.Service.DeleteOnlineUser(userID); err != nil {
 				log.Println(err)
 			}
