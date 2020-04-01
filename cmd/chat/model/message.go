@@ -19,4 +19,5 @@ type Message struct {
 	SenderID    string `json:"senderId"`
 	ReceiverID  string `json:"receiverId"`
 	Message     string `json:"message"`
+	CreatedAt   string `json:"createdAt"`
 }

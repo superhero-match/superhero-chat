@@ -10,6 +10,8 @@ import (
 	"github.com/superhero-match/superhero-chat/cmd/chat/service"
 	"github.com/superhero-match/superhero-chat/internal/config"
 	"log"
+	"strings"
+	"time"
 )
 
 // connectedUsers holds all the currently online/connected active users connections/websockets.
@@ -126,7 +128,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 					// User is not online anymore, that means the offline message needs to be stored in database,
 					// cache and Firebase cloud function needs to be run in order to notify user that there is
 					// offline message awaiting on the server that needs to be picked up.
-					err = s.Service.StoreMessage(m, false)
+					err = s.Service.StoreMessage(m, false, m.CreatedAt)
 					if err != nil {
 						log.Println(err)
 					}
@@ -152,6 +154,8 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		if err := json.Unmarshal([]byte(msg), &message); err != nil {
 			log.Println(err)
 		}
+
+		message.CreatedAt = strings.ReplaceAll(time.Now().UTC().Format(s.Service.TimeFormat), "T", " ")
 
 		// Once a message is received, the check is made whether the receiver is online.
 		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
@@ -192,7 +196,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			)
 		}
 
-		err = s.Service.StoreMessage(message, isOnline)
+		err = s.Service.StoreMessage(message, isOnline, message.CreatedAt)
 		if err != nil {
 			log.Println(err)
 		}
