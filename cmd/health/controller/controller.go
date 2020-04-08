@@ -11,28 +11,30 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package config
+package controller
 
 import (
-	"github.com/jinzhu/configor"
+	"github.com/gin-gonic/gin"
 )
 
-// Config holds the configuration.
-type Config struct {
-	App      *App
-	RabbitMQ *RabbitMQ
-	Cache    *Cache
-	Producer *Producer
-	Health   *Health
+// Controller holds the Controller data.
+type Controller struct {
 }
 
-// NewConfig returns the configuration.
-func NewConfig() (cnf *Config, e error) {
-	var cfg Config
+// NewController returns new controller.
+func NewController() (*Controller, error) {
+	return &Controller{}, nil
+}
 
-	if err := configor.Load(&cfg, "config.yml"); err != nil {
-		return nil, err
-	}
+// RegisterRoutes registers all the superhero_suggestions API routes.
+func (ctl *Controller) RegisterRoutes() *gin.Engine {
+	router := gin.Default()
 
-	return &cfg, nil
+	sr := router.Group("/api/v1/superhero_chat_health")
+
+	// Routes.
+	sr.POST("/health", ctl.Health)
+	sr.POST("/shutdown", ctl.Shutdown)
+
+	return router
 }

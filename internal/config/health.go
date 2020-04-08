@@ -13,26 +13,10 @@
 */
 package config
 
-import (
-	"github.com/jinzhu/configor"
-)
-
-// Config holds the configuration.
-type Config struct {
-	App      *App
-	RabbitMQ *RabbitMQ
-	Cache    *Cache
-	Producer *Producer
-	Health   *Health
-}
-
-// NewConfig returns the configuration.
-func NewConfig() (cnf *Config, e error) {
-	var cfg Config
-
-	if err := configor.Load(&cfg, "config.yml"); err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
+// Health holds configuration for health server.
+type Health struct {
+	Address          string `env:"HEALTH_SERVER_ADDRESS" default:"192.168.0.101"`
+	Port             string `env:"HEALTH_SERVER_PORT" default:":8120"`
+	ShutdownEndpoint string `env:"HEALTH_SERVER_SHUTDOWN_ENDPOINT" default:"/api/v1/superhero_chat_health/shutdown"`
+	ContentType      string `env:"HEALTH_SERVER_CONTENT_TYPE" default:"application/json"`
 }

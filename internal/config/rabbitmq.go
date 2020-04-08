@@ -16,9 +16,9 @@ package config
 // RabbitMQ holds the configuration values for the RabbitMQ.
 type RabbitMQ struct {
 	Host               string `env:"RABBITMQ_HOST" default:"amqp://%s:%s@%s:%s/"`
-	User               string `env:"RABBITMQ_USER" default:"guest"`
-	Password           string `env:"RABBITMQ_PASSWORD" default:"guest"`
-	Address            string `env:"RABBITMQ_ADDRESS" default:"localhost"`
+	User               string `env:"RABBITMQ_USER" default:"dev"`
+	Password           string `env:"RABBITMQ_PASSWORD" default:"password"`
+	Address            string `env:"RABBITMQ_ADDRESS" default:"192.168.0.101"`
 	Port               string `env:"RABBITMQ_PORT" default:"5672"`
 	ExchangeName       string `env:"RABBITMQ_EXCHANGE_NAME" default:"message.for.*"`
 	ExchangeType       string `env:"RABBITMQ_EXCHANGE_TYPE" default:"topic"`

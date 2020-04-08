@@ -1,12 +1,5 @@
 prepare:
-	go get -u github.com/golang/dep/cmd/dep
-	go get -u github.com/gin-gonic/gin
-	go get -u golang.org/x/sys/unix
-	go get -u github.com/jinzhu/configor
-	go get -u github.com/go-sql-driver/mysql
-	go get -u go.uber.org/zap
-	go get -u github.com/streadway/amqp
-	go get -u github.com/googollee/go-socket.io
+	go mod download
 
 run:
 	go build -o bin/main cmd/chat/main.go
@@ -16,14 +9,11 @@ build:
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o bin/main cmd/chat/main.go
 	chmod +x bin/main
 
-deps:
-	dep ensure -v
-
 dkb:
 	docker build -t superhero-chat .
 
 dkr:
-	docker run --rm -p "6000:6000" superhero-chat
+	docker run -p "8120:8120" superhero-chat
 
 launch: dkb dkr
 

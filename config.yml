@@ -7,9 +7,9 @@ app:
 # amqp://guest:guest@localhost:5672/
 rabbitmq:
   host: 'amqp://%s:%s@%s:%s/'
-  user: guest
-  password: guest
-  address: localhost
+  user: 'dev'
+  password: 'password'
+  address: '192.168.0.101'
   port: '5672'
   exchange_name: 'message.for.*'
   exchange_type: 'topic'
@@ -36,3 +36,9 @@ producer:
   topic: 'store.chat.message'
   batch_size: 1
   batch_timeout: 10
+
+health:
+  address: '192.168.0.101'
+  port: ':8120'
+  shutdown_endpoint: '/api/v1/superhero_chat_health/shutdown'
+  content_type: 'application/json'

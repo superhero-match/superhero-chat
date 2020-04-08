@@ -17,6 +17,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/superhero-match/superhero-chat/cmd/chat/socketio"
 	"github.com/superhero-match/superhero-chat/internal/config"
+	"github.com/superhero-match/superhero-chat/internal/health"
 )
 
 func main() {
@@ -25,15 +26,21 @@ func main() {
 		panic(err)
 	}
 
+	client := health.NewClient(cfg)
+
 	router := gin.New()
 
 	socketIO, err := socketio.NewSocketIO(cfg)
 	if err != nil {
+		_ = client.ShutdownHealthServer()
+
 		panic(err)
 	}
 
 	server, err := socketIO.NewSocketIOServer()
 	if err != nil {
+		_ = client.ShutdownHealthServer()
+
 		panic(err)
 	}
 
@@ -49,6 +56,10 @@ func main() {
 		cfg.App.KeyFile,
 	)
 	if err != nil {
+		_ = client.ShutdownHealthServer()
+
 		panic(err)
 	}
+
+	_ = client.ShutdownHealthServer()
 }

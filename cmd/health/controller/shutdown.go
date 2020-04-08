@@ -11,28 +11,17 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package config
+package controller
 
 import (
-	"github.com/jinzhu/configor"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
 )
 
-// Config holds the configuration.
-type Config struct {
-	App      *App
-	RabbitMQ *RabbitMQ
-	Cache    *Cache
-	Producer *Producer
-	Health   *Health
-}
-
-// NewConfig returns the configuration.
-func NewConfig() (cnf *Config, e error) {
-	var cfg Config
-
-	if err := configor.Load(&cfg, "config.yml"); err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
+// Shutdown is called and panics when API server panics so that Health controller would not be responding and
+// loadbalancer would mark API server un-healthy and spin-up a new instance of API server.
+func (ctl *Controller) Shutdown(c *gin.Context) {
+	c.Status(http.StatusOK)
+	os.Exit(2)
 }

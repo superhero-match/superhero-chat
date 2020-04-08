@@ -11,28 +11,19 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package config
+package health
 
 import (
-	"github.com/jinzhu/configor"
+	"net/http"
 )
 
-// Config holds the configuration.
-type Config struct {
-	App      *App
-	RabbitMQ *RabbitMQ
-	Cache    *Cache
-	Producer *Producer
-	Health   *Health
-}
-
-// NewConfig returns the configuration.
-func NewConfig() (cnf *Config, e error) {
-	var cfg Config
-
-	if err := configor.Load(&cfg, "config.yml"); err != nil {
-		return nil, err
+// ShutdownHealthServer sends shutdown signal to health server. This shutdown signal is sent only when API server
+// is panicking and is about to be shutdown to notify loadbalancer that API is un-healthy.
+func (c *Client) ShutdownHealthServer () error {
+	_, err := http.Post(c.HealthServerURL, c.ContentType, nil)
+	if err != nil {
+		return err
 	}
 
-	return &cfg, nil
+	return nil
 }

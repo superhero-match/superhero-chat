@@ -11,28 +11,14 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package config
+package controller
 
 import (
-	"github.com/jinzhu/configor"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-// Config holds the configuration.
-type Config struct {
-	App      *App
-	RabbitMQ *RabbitMQ
-	Cache    *Cache
-	Producer *Producer
-	Health   *Health
-}
-
-// NewConfig returns the configuration.
-func NewConfig() (cnf *Config, e error) {
-	var cfg Config
-
-	if err := configor.Load(&cfg, "config.yml"); err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
+// Health is used for health checks from loadbalancer.
+func (ctl *Controller) Health(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

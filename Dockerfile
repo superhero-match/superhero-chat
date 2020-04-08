@@ -14,11 +14,16 @@ COPY . /build
 WORKDIR /build/cmd/chat
 
 # Fetch dependencies.
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN dep ensure -v
+RUN go mod download
 
 # Build the Go app.
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main
+
+# Set build as working directory.
+WORKDIR /build/cmd/health
+
+# Build the Go app.
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o health
 
 # Create unprivelleged user.
 RUN adduser --disabled-login appuser
@@ -37,14 +42,24 @@ RUN mkdir app
 # Copy the pre-built binary file from the previous stage.
 COPY --from=builder /build/cmd/chat/main /app/
 
+# Copy the pre-built binary file from the previous stage.
+COPY --from=builder /build/cmd/health/health /app/
+
+# Copy the config file from the previous stage.
+COPY ./config.yml /app/
+
+# Copy the certificates from the previous stage.
+COPY ./cmd/chat/certificate.pem /app/cmd/chat/
+COPY ./cmd/chat/key.pem /app/cmd/chat/
+
 # Set working directory in current stage.
 WORKDIR /app
 
 # Use an unprivileged user.
 USER appuser
 
-# Expose port 6000.
-EXPOSE 6000 6000
+# Expose port 8120.
+EXPOSE 8120 8120
 
-# Command to run the executable.
-CMD ["./main"]
+# Command to run the executables.
+CMD ["sh", "-c", "( ./health & ) && ./main"]
