@@ -16,6 +16,8 @@ package health
 import (
 	"fmt"
 	"github.com/superhero-match/superhero-chat/internal/config"
+	"log"
+	"net"
 )
 
 // Client holds health client related data.
@@ -27,7 +29,20 @@ type Client struct {
 // NewClient return new health client.
 func NewClient(cfg *config.Config) *Client {
 	return &Client{
-		HealthServerURL: fmt.Sprintf("http://%s%s%s", cfg.Health.Address, cfg.Health.Port, cfg.Health.ShutdownEndpoint),
+		HealthServerURL: fmt.Sprintf("http://%s%s%s", getIPAddress(), cfg.Health.Port, cfg.Health.ShutdownEndpoint),
 		ContentType:     cfg.Health.ContentType,
 	}
+}
+
+// Get preferred outbound ip of this machine.
+func getIPAddress() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP.String()
 }

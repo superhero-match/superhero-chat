@@ -15,7 +15,6 @@ package config
 
 // Health holds configuration for health server.
 type Health struct {
-	Address          string `env:"HEALTH_SERVER_ADDRESS" default:"192.168.0.101"`
 	Port             string `env:"HEALTH_SERVER_PORT" default:":8120"`
 	ShutdownEndpoint string `env:"HEALTH_SERVER_SHUTDOWN_ENDPOINT" default:"/api/v1/superhero_chat_health/shutdown"`
 	ContentType      string `env:"HEALTH_SERVER_CONTENT_TYPE" default:"application/json"`

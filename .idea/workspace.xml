@@ -3,12 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="146cacab-9b4d-4db2-a010-03e0ad647e08" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/rabbitmq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/config/health.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/health.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/health/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/health/client.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,22 +110,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1583854132882" />
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom" timestamp="1586350972463">
+    <state width="1323" height="339" key="GridCell.Tab.0.bottom" timestamp="1586355891038">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1586350972463" />
-    <state width="1323" height="339" key="GridCell.Tab.0.center" timestamp="1586350972463">
+    <state width="1323" height="339" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1586355891038" />
+    <state width="1323" height="339" key="GridCell.Tab.0.center" timestamp="1586355891038">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1586350972463" />
-    <state width="1323" height="339" key="GridCell.Tab.0.left" timestamp="1586350972462">
+    <state width="1323" height="339" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1586355891037" />
+    <state width="1323" height="339" key="GridCell.Tab.0.left" timestamp="1586355891037">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1586350972462" />
-    <state width="1323" height="339" key="GridCell.Tab.0.right" timestamp="1586350972463">
+    <state width="1323" height="339" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1586355891037" />
+    <state width="1323" height="339" key="GridCell.Tab.0.right" timestamp="1586355891038">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1586350972463" />
+    <state width="1323" height="339" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1586355891038" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1583413826604">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
