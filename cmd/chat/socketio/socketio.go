@@ -58,18 +58,13 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		return nil
 	})
 
-	server.OnEvent("/", "onOpen", func(c socketio.Conn, msg string) {
+	server.OnEvent("/", "onOpen", func(c socketio.Conn, senderID string) {
 		log.Println("onOpen event raised...")
 
-		var message model.Message
-		if err := json.Unmarshal([]byte(msg), &message); err != nil {
-			log.Println(err)
-		}
+		connectedUsers[senderID] = c
+		connectedUsersIDs[c.ID()] = senderID
 
-		connectedUsers[message.SenderID] = c
-		connectedUsersIDs[c.ID()] = message.SenderID
-
-		err = s.Service.SetOnlineUser(message.SenderID)
+		err = s.Service.SetOnlineUser(senderID)
 		if err != nil {
 			log.Println(err)
 		}
@@ -89,7 +84,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 
 		err = s.Service.RabbitMQ.Channel.QueueBind(
 			q.Name,                          // queue name
-			message.SenderID,                // routing key
+			senderID,                // routing key
 			s.Service.RabbitMQ.ExchangeName, // exchange
 			false,
 			nil,
@@ -98,7 +93,7 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			log.Println(err)
 		}
 
-		connectedUsersQueueNames[message.SenderID] = q.Name
+		connectedUsersQueueNames[senderID] = q.Name
 
 		msgs, err := s.Service.RabbitMQ.Channel.Consume(
 			q.Name, // queue

@@ -49,8 +49,8 @@ COPY --from=builder /build/cmd/health/health /app/
 COPY ./config.yml /app/
 
 # Copy the certificates from the previous stage.
-COPY ./cmd/chat/certificate.pem /app/cmd/chat/
-COPY ./cmd/chat/key.pem /app/cmd/chat/
+COPY ./certificate.pem /app/cmd/chat/
+COPY ./key.pem /app/cmd/chat/
 
 # Set working directory in current stage.
 WORKDIR /app

@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="146cacab-9b4d-4db2-a010-03e0ad647e08" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/health.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/health.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/health/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/health/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/chat/socketio/socketio.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/socketio/socketio.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +53,7 @@
       <recent name="C:\Users\ACER\go\src\github.com\superhero-chat" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build github.com/superhero-match/superhero-chat/cmd/health">
+  <component name="RunManager" selected="Go Build.go build github.com/superhero-match/superhero-chat/cmd/chat">
     <configuration name="go build github.com/superhero-chat/cmd/chat" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="superhero-chat" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -84,8 +83,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build github.com/superhero-match/superhero-chat/cmd/health" />
         <item itemvalue="Go Build.go build github.com/superhero-match/superhero-chat/cmd/chat" />
+        <item itemvalue="Go Build.go build github.com/superhero-match/superhero-chat/cmd/health" />
         <item itemvalue="Go Build.go build github.com/superhero-chat/cmd/chat" />
       </list>
     </recent_temporary>
@@ -110,22 +109,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1583854132882" />
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom" timestamp="1586355891038">
+    <state width="1323" height="339" key="GridCell.Tab.0.bottom" timestamp="1587554667182">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1586355891038" />
-    <state width="1323" height="339" key="GridCell.Tab.0.center" timestamp="1586355891038">
+    <state width="1323" height="339" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587554667182" />
+    <state width="1323" height="339" key="GridCell.Tab.0.center" timestamp="1587554667182">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1586355891037" />
-    <state width="1323" height="339" key="GridCell.Tab.0.left" timestamp="1586355891037">
+    <state width="1323" height="339" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1587554667181" />
+    <state width="1323" height="339" key="GridCell.Tab.0.left" timestamp="1587554667181">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1586355891037" />
-    <state width="1323" height="339" key="GridCell.Tab.0.right" timestamp="1586355891038">
+    <state width="1323" height="339" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1587554667181" />
+    <state width="1323" height="339" key="GridCell.Tab.0.right" timestamp="1587554667182">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1586355891038" />
+    <state width="1323" height="339" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1587554667182" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1583413826604">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
