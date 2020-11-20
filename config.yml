@@ -8,8 +8,8 @@ app:
 rabbitmq:
   host: 'amqp://%s:%s@%s:%s/'
   user: 'dev'
-  password: 'password'
-  address: '192.168.0.101'
+  password: 'Awesome85**'
+  address: '192.168.0.64'
   port: '5672'
   exchange_name: 'message.for.*'
   exchange_type: 'topic'
@@ -22,7 +22,7 @@ rabbitmq:
   content_type: "application/json"
 
 cache:
-  address: '192.168.0.105'
+  address: '192.168.0.64'
   port: ':6379'
   password: 'Awesome85**'
   db: 0
@@ -32,7 +32,7 @@ cache:
   online_user_key_format: 'online.user.%s'
 
 producer:
-  brokers: ['192.168.0.105:9092']
+  brokers: ['192.168.0.64:9092']
   topic: 'store.chat.message'
   batch_size: 1
   batch_timeout: 10

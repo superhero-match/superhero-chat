@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@ package config
 
 // Health holds configuration for health server.
 type Health struct {
-	Port             string `env:"HEALTH_SERVER_PORT" default:":8120"`
-	ShutdownEndpoint string `env:"HEALTH_SERVER_SHUTDOWN_ENDPOINT" default:"/api/v1/superhero_chat_health/shutdown"`
-	ContentType      string `env:"HEALTH_SERVER_CONTENT_TYPE" default:"application/json"`
+	Port             string `env:"SUPERHERO_CHAT_HEALTH_SERVER_PORT" yaml:"port" default:":8120"`
+	ShutdownEndpoint string `env:"SUPERHERO_CHAT_HEALTH_SERVER_SHUTDOWN_ENDPOINT" yaml:"shutdown_endpoint" default:"/api/v1/superhero_chat_health/shutdown"`
+	ContentType      string `env:"SUPERHERO_CHAT_HEALTH_SERVER_CONTENT_TYPE" yaml:"content_type" default:"application/json"`
 }

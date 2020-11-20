@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
+  Copyright (C) 2019 - 2021 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,18 +15,18 @@ package config
 
 // RabbitMQ holds the configuration values for the RabbitMQ.
 type RabbitMQ struct {
-	Host               string `env:"RABBITMQ_HOST" default:"amqp://%s:%s@%s:%s/"`
-	User               string `env:"RABBITMQ_USER" default:"dev"`
-	Password           string `env:"RABBITMQ_PASSWORD" default:"password"`
-	Address            string `env:"RABBITMQ_ADDRESS" default:"192.168.0.101"`
-	Port               string `env:"RABBITMQ_PORT" default:"5672"`
-	ExchangeName       string `env:"RABBITMQ_EXCHANGE_NAME" default:"message.for.*"`
-	ExchangeType       string `env:"RABBITMQ_EXCHANGE_TYPE" default:"topic"`
-	ExchangeDurable    bool   `env:"RABBITMQ_EXCHANGE_DURABLE" default:"true"`
-	ExchangeAutoDelete bool   `env:"RABBITMQ_EXCHANGE_AUTO_DELETE" default:"false"`
-	ExchangeInternal   bool   `env:"RABBITMQ_EXCHANGE_INTERNAL" default:"false"`
-	ExchangeNoWait     bool   `env:"RABBITMQ_EXCHANGE_NO_WAIT" default:"false"`
-	TopicMandatory     bool   `env:"RABBITMQ_TOPIC_MANDATORY" default:"false"`
-	TopicImmediate     bool   `env:"RABBITMQ_TOPIC_IMMEDIATE" default:"false"`
-	ContentType        string `env:"RABBITMQ_CONTENT_TYPE" default:"application/json"`
+	Host               string `env:"RABBITMQ_HOST" yaml:"host" default:"amqp://%s:%s@%s:%s/"`
+	User               string `env:"RABBITMQ_USER" yaml:"user" default:"dev"`
+	Password           string `env:"RABBITMQ_PASSWORD" yaml:"password" default:"password"`
+	Address            string `env:"RABBITMQ_ADDRESS" yaml:"address" default:"192.168.0.101"`
+	Port               string `env:"RABBITMQ_PORT" yaml:"port" default:"5672"`
+	ExchangeName       string `env:"RABBITMQ_EXCHANGE_NAME" yaml:"exchange_name" default:"message.for.*"`
+	ExchangeType       string `env:"RABBITMQ_EXCHANGE_TYPE" yaml:"exchange_type" default:"topic"`
+	ExchangeDurable    bool   `env:"RABBITMQ_EXCHANGE_DURABLE" yaml:"exchange_durable" default:"true"`
+	ExchangeAutoDelete bool   `env:"RABBITMQ_EXCHANGE_AUTO_DELETE" yaml:"exchange_auto_delete" default:"false"`
+	ExchangeInternal   bool   `env:"RABBITMQ_EXCHANGE_INTERNAL" yaml:"exchange_internal" default:"false"`
+	ExchangeNoWait     bool   `env:"RABBITMQ_EXCHANGE_NO_WAIT" yaml:"exchange_no_wait" default:"false"`
+	TopicMandatory     bool   `env:"RABBITMQ_TOPIC_MANDATORY" yaml:"topic_mandatory" default:"false"`
+	TopicImmediate     bool   `env:"RABBITMQ_TOPIC_IMMEDIATE" yaml:"topic_immediate" default:"false"`
+	ContentType        string `env:"RABBITMQ_CONTENT_TYPE" yaml:"content_type" default:"application/json"`
 }
