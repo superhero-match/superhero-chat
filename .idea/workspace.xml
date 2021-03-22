@@ -2,48 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="146cacab-9b4d-4db2-a010-03e0ad647e08" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/ACER.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/ACER.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/superhero-chat.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/superhero-chat.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/model/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/mapper/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/mapper/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/chat/socketio/socketio.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/chat/socketio/socketio.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/health/controller/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/health/controller/controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/health/controller/health.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/health/controller/health.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/health/controller/shutdown.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/health/controller/shutdown.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/health/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/health/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/delete_user_online.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/delete_user_online.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/get_online_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/get_online_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/cache/set_online_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cache/set_online_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/health.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/health.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/config/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/rabbitmq.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/health/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/health/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/health/shutdown.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/health/shutdown.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/model/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/producer/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/producer/store.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/rabbitmq/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rabbitmq/rabbitmq.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +38,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../consumer-superhero-chat" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -132,44 +92,6 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="275" y="23" key="#Go_Modules_(vgo)" timestamp="1584779697175">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="275" y="23" key="#Go_Modules_(vgo)/0.0.1366.728@0.0.1366.728" timestamp="1584779697175" />
-    <state x="363" y="92" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1582961118342">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="363" y="92" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1366.728@0.0.1366.728" timestamp="1582961118342" />
-    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog" timestamp="1583479803209">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1583479803209" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1583854132882">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1583854132882" />
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom" timestamp="1587554667182">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587554667182" />
-    <state width="1323" height="339" key="GridCell.Tab.0.center" timestamp="1587554667182">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1587554667181" />
-    <state width="1323" height="339" key="GridCell.Tab.0.left" timestamp="1587554667181">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1587554667181" />
-    <state width="1323" height="339" key="GridCell.Tab.0.right" timestamp="1587554667182">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state width="1323" height="339" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1587554667182" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1583413826604">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1583413826604" />
   </component>
   <component name="masterDetails">
     <states>
