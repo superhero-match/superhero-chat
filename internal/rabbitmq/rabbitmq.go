@@ -36,13 +36,6 @@ func NewRabbitMQ(cfg *config.Config) (*RabbitMQ, error) {
 		cfg.RabbitMQ.Port,
 	)
 
-	fmt.Println(cfg.RabbitMQ.Host)
-	fmt.Println(cfg.RabbitMQ.User)
-	fmt.Println(cfg.RabbitMQ.Password)
-	fmt.Println(cfg.RabbitMQ.Address)
-	fmt.Println(cfg.RabbitMQ.Port)
-	fmt.Println(rabbitMQURL)
-
 	conn, err := amqp.Dial(rabbitMQURL)
 	if err != nil {
 		return nil, err
