@@ -58,6 +58,9 @@ WORKDIR /app
 # Use an unprivileged user.
 USER appuser
 
+# Expose port 5000.
+EXPOSE 5000 5000
+
 # Expose port 8120.
 EXPOSE 8120 8120
 
