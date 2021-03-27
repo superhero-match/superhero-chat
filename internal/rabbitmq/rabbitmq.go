@@ -27,16 +27,23 @@ type RabbitMQ struct {
 
 // NewRabbitMQChannel connects to RabbitMQ, creates channel, declares queue and returns channel.
 func NewRabbitMQ(cfg *config.Config) (*RabbitMQ, error) {
-	// "amqp://guest:guest@localhost:5672/
-	conn, err := amqp.Dial(
-		fmt.Sprintf(
-			cfg.RabbitMQ.Host,
-			cfg.RabbitMQ.User,
-			cfg.RabbitMQ.Password,
-			cfg.RabbitMQ.Address,
-			cfg.RabbitMQ.Port,
-		),
+	// amqp://guest:guest@localhost:5672/
+	rabbitMQURL := fmt.Sprintf(
+		cfg.RabbitMQ.Host,
+		cfg.RabbitMQ.User,
+		cfg.RabbitMQ.Password,
+		cfg.RabbitMQ.Address,
+		cfg.RabbitMQ.Port,
 	)
+
+	fmt.Println(cfg.RabbitMQ.Host)
+	fmt.Println(cfg.RabbitMQ.User)
+	fmt.Println(cfg.RabbitMQ.Password)
+	fmt.Println(cfg.RabbitMQ.Address)
+	fmt.Println(cfg.RabbitMQ.Port)
+	fmt.Println(rabbitMQURL)
+
+	conn, err := amqp.Dial(rabbitMQURL)
 	if err != nil {
 		return nil, err
 	}
