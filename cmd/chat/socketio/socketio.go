@@ -214,25 +214,35 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		log.Println("OnDisconnect event raised...", reason)
 
 		userID, ok := connectedUsersIDs[c.ID()]
+		fmt.Println("userID, ok := connectedUsersIDs[c.ID()]")
+		fmt.Println("userID -> ", userID)
+		fmt.Println("ok -> ", ok)
 		if ok {
 			delete(connectedUsers, userID)
 
 			delete(connectedUsersIDs, c.ID())
 
 			queueName, ok := connectedUsersQueueNames[userID]
+			fmt.Println("queueName, ok := connectedUsersQueueNames[userID]")
+			fmt.Println("queueName -> ", queueName)
+			fmt.Println("ok -> ", ok)
 			if ok {
+				fmt.Println("before s.Service.RabbitMQ.Channel.QueueUnbind")
 				err = s.Service.RabbitMQ.Channel.QueueUnbind(
 					queueName,
 					userID,
 					s.Service.RabbitMQ.ExchangeName,
 					nil,
 				)
+				fmt.Println("err -> s.Service.RabbitMQ.Channel.QueueUnbind -> ", err)
 				if err != nil {
 					log.Println(err)
 				}
 			}
 
+			fmt.Println("before s.Service.DeleteOnlineUser(userID)")
 			if err := s.Service.DeleteOnlineUser(userID); err != nil {
+				fmt.Println("err -> s.Service.DeleteOnlineUser(userID) -> ", err)
 				log.Println(err)
 			}
 		}
