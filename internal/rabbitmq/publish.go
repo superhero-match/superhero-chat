@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -11,28 +11,24 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package main
+package rabbitmq
 
 import (
-	"github.com/superhero-match/superhero-chat/cmd/health/controller"
-	"github.com/superhero-match/superhero-chat/internal/config"
+	"github.com/streadway/amqp"
 )
 
-func main() {
-	cfg, err := config.NewConfig()
-	if err != nil {
-		panic(err)
-	}
+// Publish publishes RabbitMQ message.
+func (r *rabbitMQ) Publish(receiverID string, message []byte) error {
+	err := r.Channel.Publish(
+		r.ExchangeName,
+		receiverID, // routing key
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: r.ContentType,
+			Body:        message,
+		},
+	)
 
-	ctrl, err := controller.NewController()
-	if err != nil {
-		panic(err)
-	}
-
-	r := ctrl.RegisterRoutes()
-
-	err = r.Run(cfg.Health.Port)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,18 +15,29 @@ package rabbitmq
 
 import (
 	"fmt"
+
 	"github.com/streadway/amqp"
+
 	"github.com/superhero-match/superhero-chat/internal/config"
 )
 
-type RabbitMQ struct {
+// RabbitMQ interface defines RabbitMQ methods.
+type RabbitMQ interface {
+	QueueDeclare() (amqp.Queue, error)
+	QueueBind(queueName string, senderID string) error
+	Consume(queueName string) (<-chan amqp.Delivery, error)
+	Publish(receiverID string, message []byte) error
+	QueueUnbind(queueName string, userID string) error
+}
+
+type rabbitMQ struct {
 	Channel      *amqp.Channel
 	ExchangeName string
 	ContentType  string
 }
 
-// NewRabbitMQChannel connects to RabbitMQ, creates channel, declares queue and returns channel.
-func NewRabbitMQ(cfg *config.Config) (*RabbitMQ, error) {
+// NewRabbitMQ connects to RabbitMQ, creates channel, declares queue and returns channel.
+func NewRabbitMQ(cfg *config.Config) (RabbitMQ, error) {
 	// amqp://guest:guest@localhost:5672/
 	rabbitMQURL := fmt.Sprintf(
 		cfg.RabbitMQ.Host,
@@ -56,7 +67,7 @@ func NewRabbitMQ(cfg *config.Config) (*RabbitMQ, error) {
 		nil,
 	)
 
-	return &RabbitMQ{
+	return &rabbitMQ{
 		Channel:      ch,
 		ExchangeName: cfg.RabbitMQ.ExchangeName,
 		ContentType:  cfg.RabbitMQ.ContentType,

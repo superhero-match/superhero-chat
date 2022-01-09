@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -11,17 +11,25 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package controller
+package rabbitmq
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"os"
+	"github.com/streadway/amqp"
 )
 
-// Shutdown is called and panics when API server panics so that Health controller would not be responding and
-// loadbalancer would mark API server un-healthy and spin-up a new instance of API server.
-func (ctl *Controller) Shutdown(c *gin.Context) {
-	c.Status(http.StatusOK)
-	os.Exit(2)
+// QueueDeclare declares queue.
+func (r *rabbitMQ) QueueDeclare() (amqp.Queue, error) {
+	q, err := r.Channel.QueueDeclare(
+		"",    // name, when left empty RabbitMQ generates one automatically.
+		true,  // durable means persisted on disk.
+		true,  // delete
+		true,  // exclusive queue is deleted when connection that declared it is closed.
+		false, // no-wait
+		nil,   // arguments
+	)
+	if err != nil {
+		return q, err
+	}
+
+	return q, nil
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,8 +18,8 @@ import (
 )
 
 // SetOnlineUser stores user id of user that is currently has the app opened (is online) into Redis cache.
-func (s *Service) SetOnlineUser(userID string) error {
-	err := s.Cache.SetOnlineUser(userID)
+func (s *service) SetOnlineUser(key string, userID string) error {
+	err := s.Cache.SetOnlineUser(key, userID)
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func (s *Service) SetOnlineUser(userID string) error {
 }
 
 // GetOnlineUser fetches online user id from cache.
-func (s *Service) GetOnlineUser(key string) (string, error) {
+func (s *service) GetOnlineUser(key string) (string, error) {
 	onlineUserID, err := s.Cache.GetOnlineUser(key)
 	if err != nil && err != redis.Nil {
 		return "", err
@@ -42,6 +42,6 @@ func (s *Service) GetOnlineUser(key string) (string, error) {
 }
 
 // DeleteOnlineUser deletes online user form Redis cache when user disconnects.
-func (s *Service) DeleteOnlineUser(userID string) error {
-	return s.Cache.DeleteOnlineUser(userID)
+func (s *service) DeleteOnlineUser(keys []string, userID string) error {
+	return s.Cache.DeleteOnlineUser(keys, userID)
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,5 @@ package config
 // App holds the configuration values for the application.
 type App struct {
 	Port       string `env:"SUPERHERO_CHAT_APP_PORT" yaml:"port" default:":5000"`
-	CertFile   string `env:"SUPERHERO_CHAT_APP_CERT_FILE" yaml:"cert_file" default:"./cmd/chat/certificate.pem"`
-	KeyFile    string `env:"SUPERHERO_CHAT_APP_KEY_FILE" yaml:"key_file" default:"./cmd/chat/key.pem"`
 	TimeFormat string `env:"SUPERHERO_CHAT_APP_TIME_FORMAT" yaml:"time_format" default:"2006-01-02T15:04:05"`
 }

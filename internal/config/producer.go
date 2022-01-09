@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,8 +15,8 @@ package config
 
 // Producer holds the configuration values for the Kafka producer.
 type Producer struct {
-	Brokers      []string `env:"KAFKA_BROKERS" yaml:"brokers" default:"[192.168.0.105:9092]"`
-	Topic        string   `env:"KAFKA_STORE_CHAT_MESSAGE_TOPIC" yaml:"topic" default:"store.chat.message"`
-	BatchSize    int      `env:"KAFKA_BATCH_SIZE" yaml:"batch_size" default:"1"`
-	BatchTimeout int      `env:"KAFKA_BATCH_TIMEOUT" yaml:"batch_timeout" default:"10"`
+	Brokers      string `env:"KAFKA_BROKERS" yaml:"brokers" default:"192.168.1.229:9092"`
+	Topic        string `env:"KAFKA_STORE_CHAT_MESSAGE_TOPIC" yaml:"topic" default:"store.chat.message"`
+	BatchSize    int    `env:"KAFKA_BATCH_SIZE" yaml:"batch_size" default:"1"`
+	BatchTimeout int    `env:"KAFKA_BATCH_TIMEOUT" yaml:"batch_timeout" default:"10"`
 }

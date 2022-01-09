@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -14,10 +14,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+
 	"github.com/superhero-match/superhero-chat/cmd/chat/socketio"
 	"github.com/superhero-match/superhero-chat/internal/config"
-	"github.com/superhero-match/superhero-chat/internal/health"
 )
 
 func main() {
@@ -26,21 +28,15 @@ func main() {
 		panic(err)
 	}
 
-	client := health.NewClient(cfg)
-
 	router := gin.New()
 
 	socketIO, err := socketio.NewSocketIO(cfg)
 	if err != nil {
-		_ = client.ShutdownHealthServer()
-
 		panic(err)
 	}
 
 	server, err := socketIO.NewSocketIOServer()
 	if err != nil {
-		_ = client.ShutdownHealthServer()
-
 		panic(err)
 	}
 
@@ -50,16 +46,13 @@ func main() {
 	router.GET("/*any", gin.WrapH(server))
 	router.POST("/*any", gin.WrapH(server))
 
-	err = router.RunTLS(
-		cfg.App.Port,
-		cfg.App.CertFile,
-		cfg.App.KeyFile,
-	)
+	err = router.Run(cfg.App.Port)
 	if err != nil {
-		_ = client.ShutdownHealthServer()
-
 		panic(err)
 	}
+}
 
-	_ = client.ShutdownHealthServer()
+// Health is used for health checks from loadbalancer.
+func Health(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

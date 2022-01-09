@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -26,6 +26,6 @@ func MapAPIMessageToProducer(m model.Message, isOnline bool, createdAt string) (
 		ReceiverID:  m.ReceiverID,
 		Message:     m.Message,
 		IsOnline:    isOnline,
-		CreatedAt:  createdAt,
+		CreatedAt:   createdAt,
 	}
 }

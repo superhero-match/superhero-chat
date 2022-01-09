@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@ package config
 
 // Cache holds all the configuration settings for the Redis client.
 type Cache struct {
-	Address                string `env:"REDIS_ADDRESS" yaml:"address" default:"192.168.0.64"`
+	Address                string `env:"REDIS_ADDRESS" yaml:"address" default:"192.168.1.229"`
 	Port                   string `env:"REDIS_PORT" yaml:"port" default:":6379"`
 	Password               string `env:"REDIS_PASSWORD" yaml:"password" default:"Awesome85**"`
 	DB                     int    `env:"REDIS_DB" yaml:"db" default:"0"`

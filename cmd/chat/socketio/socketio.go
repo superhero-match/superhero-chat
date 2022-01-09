@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,14 +17,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	socketio "github.com/googollee/go-socket.io"
-	"github.com/streadway/amqp"
-	"github.com/superhero-match/superhero-chat/cmd/chat/model"
-	"github.com/superhero-match/superhero-chat/cmd/chat/service"
-	"github.com/superhero-match/superhero-chat/internal/config"
 	"log"
 	"strings"
 	"time"
+
+	socketio "github.com/googollee/go-socket.io"
+
+	"github.com/superhero-match/superhero-chat/cmd/chat/model"
+	"github.com/superhero-match/superhero-chat/cmd/chat/service"
+	"github.com/superhero-match/superhero-chat/internal/config"
 )
 
 // connectedUsers holds all the currently online/connected active users connections/websockets.
@@ -43,7 +44,9 @@ func init() {
 
 // SocketIO holds all the data related to Socket.IO.
 type SocketIO struct {
-	Service *service.Service
+	Service             service.Service
+	OnlineUserKeyFormat string
+	TimeFormat          string
 }
 
 // NewSocketIO returns new value of type SocketIO.
@@ -54,7 +57,9 @@ func NewSocketIO(cfg *config.Config) (*SocketIO, error) {
 	}
 
 	return &SocketIO{
-		Service: srv,
+		Service:             srv,
+		OnlineUserKeyFormat: cfg.Cache.OnlineUserKeyFormat,
+		TimeFormat:          cfg.App.TimeFormat,
 	}, nil
 }
 
@@ -77,46 +82,25 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 		connectedUsers[senderID] = c
 		connectedUsersIDs[c.ID()] = senderID
 
-		err = s.Service.SetOnlineUser(senderID)
+		err = s.Service.SetOnlineUser(fmt.Sprintf(s.OnlineUserKeyFormat, senderID), senderID)
 		if err != nil {
 			log.Println(err)
 		}
 
 		// User subscribes to RabbitMQ topic message.for.userid.
-		q, err := s.Service.RabbitMQ.Channel.QueueDeclare(
-			"",    // name, when left empty RabbitMQ generates one automatically.
-			true,  // durable means persisted on disk.
-			true,  // delete
-			true,  // exclusive queue is deleted when connection that declared it is closed.
-			false, // no-wait
-			nil,   // arguments
-		)
+		q, err := s.Service.QueueDeclare()
 		if err != nil {
 			log.Println(err)
 		}
 
-		err = s.Service.RabbitMQ.Channel.QueueBind(
-			q.Name,                          // queue name
-			senderID,                // routing key
-			s.Service.RabbitMQ.ExchangeName, // exchange
-			false,
-			nil,
-		)
+		err = s.Service.QueueBind(q.Name, senderID)
 		if err != nil {
 			log.Println(err)
 		}
 
 		connectedUsersQueueNames[senderID] = q.Name
 
-		msgs, err := s.Service.RabbitMQ.Channel.Consume(
-			q.Name, // queue
-			"",     // consumer
-			false,  // auto ack
-			false,  // exclusive
-			false,  // no local
-			false,  // no wait
-			nil,    // args
-		)
+		msgs, err := s.Service.Consume(q.Name)
 		if err != nil {
 			log.Println(err)
 		}
@@ -163,10 +147,10 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			log.Println(err)
 		}
 
-		message.CreatedAt = strings.ReplaceAll(time.Now().UTC().Format(s.Service.TimeFormat), "T", " ")
+		message.CreatedAt = strings.ReplaceAll(time.Now().UTC().Format(s.TimeFormat), "T", " ")
 
 		// Once a message is received, the check is made whether the receiver is online.
-		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.Service.Cache.OnlineUserKeyFormat, message.ReceiverID))
+		online, err := s.Service.GetOnlineUser(fmt.Sprintf(s.OnlineUserKeyFormat, message.ReceiverID))
 		if err != nil {
 			log.Println(err)
 		}
@@ -192,16 +176,10 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 				log.Println(err)
 			}
 
-			err = s.Service.RabbitMQ.Channel.Publish(
-				s.Service.RabbitMQ.ExchangeName,
-				message.ReceiverID, // routing key
-				false,
-				false,
-				amqp.Publishing{
-					ContentType: s.Service.RabbitMQ.ContentType,
-					Body:        messageBytes.Bytes(),
-				},
-			)
+			err = s.Service.Publish(message.ReceiverID, messageBytes.Bytes())
+			if err != nil {
+				log.Println(err)
+			}
 		}
 
 		err = s.Service.StoreMessage(message, isOnline, message.CreatedAt)
@@ -228,20 +206,19 @@ func (s *SocketIO) NewSocketIOServer() (*socketio.Server, error) {
 			fmt.Println("ok -> ", ok)
 			if ok {
 				fmt.Println("before s.Service.RabbitMQ.Channel.QueueUnbind")
-				err = s.Service.RabbitMQ.Channel.QueueUnbind(
-					queueName,
-					userID,
-					s.Service.RabbitMQ.ExchangeName,
-					nil,
-				)
+
+				err = s.Service.QueueUnbind(queueName, userID)
 				fmt.Println("err -> s.Service.RabbitMQ.Channel.QueueUnbind -> ", err)
 				if err != nil {
 					log.Println(err)
 				}
 			}
 
-			fmt.Println("before s.Service.DeleteOnlineUser(userID)")
-			if err := s.Service.DeleteOnlineUser(userID); err != nil {
+			fmt.Println("before s.Service.DeleteOnlineUser(keys, userID)")
+			keys := make([]string, 0)
+			keys = append(keys, fmt.Sprintf(s.OnlineUserKeyFormat, userID))
+
+			if err := s.Service.DeleteOnlineUser(keys, userID); err != nil {
 				fmt.Println("err -> s.Service.DeleteOnlineUser(userID) -> ", err)
 				log.Println(err)
 			}

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -13,13 +13,9 @@
 */
 package cache
 
-import (
-	"fmt"
-)
-
 // SetOnlineUser stores user id of user that is currently has the app opened (is online) into Redis cache.
-func (c *Cache) SetOnlineUser(userID string) error {
-	err := c.Redis.Set(fmt.Sprintf(c.OnlineUserKeyFormat, userID), userID, 0, ).Err()
+func (c *cache) SetOnlineUser(key string, userID string) error {
+	err := c.Redis.Set(key, userID, 0).Err()
 	if err != nil {
 		return err
 	}

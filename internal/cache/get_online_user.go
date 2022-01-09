@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -18,7 +18,7 @@ import (
 )
 
 // GetOnlineUser fetches online user id from cache.
-func (c *Cache) GetOnlineUser(key string) (string, error) {
+func (c *cache) GetOnlineUser(key string) (string, error) {
 	onlineUserID, err := c.Redis.Get(key).Result()
 	if err != nil && err != redis.Nil {
 		return "", err

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -11,11 +11,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package config
+package rabbitmq
 
-// Health holds configuration for health server.
-type Health struct {
-	Port             string `env:"SUPERHERO_CHAT_HEALTH_SERVER_PORT" yaml:"port" default:":8120"`
-	ShutdownEndpoint string `env:"SUPERHERO_CHAT_HEALTH_SERVER_SHUTDOWN_ENDPOINT" yaml:"shutdown_endpoint" default:"/api/v1/superhero_chat_health/shutdown"`
-	ContentType      string `env:"SUPERHERO_CHAT_HEALTH_SERVER_CONTENT_TYPE" yaml:"content_type" default:"application/json"`
+// QueueBind binds newly created queue.
+func (r *rabbitMQ) QueueBind(queueName string, senderID string) error {
+	return r.Channel.QueueBind(
+		queueName,
+		senderID, // routing key
+		r.ExchangeName,
+		false,
+		nil,
+	)
 }

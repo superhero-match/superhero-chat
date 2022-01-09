@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -14,24 +14,39 @@
 package service
 
 import (
+	"github.com/streadway/amqp"
+	"go.uber.org/zap"
+
+	"github.com/superhero-match/superhero-chat/cmd/chat/model"
 	"github.com/superhero-match/superhero-chat/internal/cache"
 	"github.com/superhero-match/superhero-chat/internal/config"
 	"github.com/superhero-match/superhero-chat/internal/producer"
 	"github.com/superhero-match/superhero-chat/internal/rabbitmq"
-	"go.uber.org/zap"
 )
 
-// Service holds all the different services that are used when handling request.
-type Service struct {
-	Producer   *producer.Producer
-	Cache      *cache.Cache
-	RabbitMQ   *rabbitmq.RabbitMQ
-	Logger     *zap.Logger
-	TimeFormat string
+// Service interface defines service methods.
+type Service interface {
+	SetOnlineUser(key string, userID string) error
+	GetOnlineUser(key string) (string, error)
+	DeleteOnlineUser(keys []string, userID string) error
+	StoreMessage(m model.Message, isOnline bool, createdAt string) error
+	Consume(queueName string) (<-chan amqp.Delivery, error)
+	Publish(receiverID string, message []byte) error
+	QueueBind(queueName string, senderID string) error
+	QueueDeclare() (amqp.Queue, error)
+	QueueUnbind(queueName string, userID string) error
+}
+
+// service holds all the different services that are used when handling request.
+type service struct {
+	Producer producer.Producer
+	Cache    cache.Cache
+	RabbitMQ rabbitmq.RabbitMQ
+	Logger   *zap.Logger
 }
 
 // NewService creates value of type Service.
-func NewService(cfg *config.Config) (*Service, error) {
+func NewService(cfg *config.Config) (Service, error) {
 	c, err := cache.NewCache(cfg)
 	if err != nil {
 		return nil, err
@@ -49,11 +64,10 @@ func NewService(cfg *config.Config) (*Service, error) {
 		return nil, err
 	}
 
-	return &Service{
-		Producer:   producer.NewProducer(cfg),
-		Cache:      c,
-		RabbitMQ:   rabbit,
-		Logger:     logger,
-		TimeFormat: cfg.App.TimeFormat,
+	return &service{
+		Producer: producer.NewProducer(cfg),
+		Cache:    c,
+		RabbitMQ: rabbit,
+		Logger:   logger,
 	}, nil
 }

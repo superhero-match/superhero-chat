@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2019 - 2021 MWSOFT
+  Copyright (C) 2019 - 2022 MWSOFT
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -11,14 +11,26 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package controller
+package rabbitmq
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/streadway/amqp"
 )
 
-// Health is used for health checks from loadbalancer.
-func (ctl *Controller) Health(c *gin.Context) {
-	c.Status(http.StatusOK)
+// Consume consumes messages from RabbitMQ.
+func (r *rabbitMQ) Consume(queueName string) (<-chan amqp.Delivery, error) {
+	msgs, err := r.Channel.Consume(
+		queueName, // queue
+		"",        // consumer
+		false,     // auto ack
+		false,     // exclusive
+		false,     // no local
+		false,     // no wait
+		nil,       // args
+	)
+	if err != nil {
+		return msgs, err
+	}
+
+	return msgs, nil
 }
